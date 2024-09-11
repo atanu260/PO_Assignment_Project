@@ -1,0 +1,40 @@
+﻿@model IEnumerable<PO_Assignment_Project.Models.PurchaseOrder>
+
+@{
+    ViewData["Title"] = "Purchase Order List";
+}
+
+<h2>Purchase Order List</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Purchase Order</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Order Number</th>
+            <th>Order Date</th>
+            <th>Vendor</th>
+            <th>Order Value</th>
+            <th>Order Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.OrderNumber</td>
+                <td>@item.OrderDate.ToShortDateString()</td>
+                <td>@item.Vendor.Name</td>
+                <td>@item.OrderValue</td>
+                <td>@item.OrderStatus</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.ID" class="btn btn-info btn-sm">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

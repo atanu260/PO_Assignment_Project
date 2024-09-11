@@ -1,0 +1,106 @@
+﻿@model PO_Assignment_Project.Models.PurchaseOrder
+
+@{
+    ViewData["Title"] = "Create Purchase Order";
+}
+
+<h2>Create Purchase Order</h2>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label asp-for="OrderNumber" class="control-label"></label>
+        <input asp-for="OrderNumber" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="OrderDate" class="control-label"></label>
+        <input asp-for="OrderDate" class="form-control" type="date" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="VendorID" class="control-label">Vendor</label>
+        <select asp-for="VendorID" class="form-control" asp-items="ViewBag.VendorID"></select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Notes" class="control-label"></label>
+        <textarea asp-for="Notes" class="form-control"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="OrderValue" class="control-label"></label>
+        <input asp-for="OrderValue" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="OrderStatus" class="control-label"></label>
+        <input asp-for="OrderStatus" class="form-control" />
+    </div>
+
+    <h4>Order Details</h4>
+
+    <div class="form-group">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Material</th>
+                    <th>Quantity</th>
+                    <th>Rate</th>
+                    <th>Value</th>
+                    <th>Expected Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.PurchaseOrderDetails.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            <select asp-for="@Model.PurchaseOrderDetails[i].MaterialID" class="form-control" asp-items="ViewBag.MaterialID"></select>
+                        </td>
+                        <td>
+                            <input asp-for="@Model.PurchaseOrderDetails[i].ItemQuantity" name="ItemQuantity" class="form-control" oninput="calculateItemValue(this)" />
+                        </td>
+                        <td>
+                            <input asp-for="@Model.PurchaseOrderDetails[i].ItemRate" name="ItemRate" class="form-control" oninput="calculateItemValue(this)" />
+                        </td>
+                        <td>
+                            <input asp-for="@Model.PurchaseOrderDetails[i].ItemValue" class="form-control" readonly />
+                        </td>
+                        <td>
+                            <input asp-for="@Model.PurchaseOrderDetails[i].ExpectedDate" class="form-control" type="date" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>
+
+<script>
+    function calculateItemValue(input) {
+        // Find the parent row of the input
+        const row = input.closest('tr');
+
+        // Get the quantity, rate, and value elements within this row
+        const quantityInput = row.querySelector('input[name="ItemQuantity"]');
+        const rateInput = row.querySelector('input[name="ItemRate"]');
+        const valueInput = row.querySelector('input[name="ItemValue"]');
+        // Parse the quantity and rate values
+        const quantity = parseFloat(quantityInput.value) || 0;
+        const rate = parseFloat(rateInput.value) || 0;
+
+        // Calculate the item value
+        const itemValue = quantity * rate;
+
+        // Update the value input field
+        valueInput.value = itemValue.toFixed(2);
+    }
+</script>
