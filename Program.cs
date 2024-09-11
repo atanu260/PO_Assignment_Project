@@ -18,6 +18,7 @@ namespace PO_Assignment_Project
                 options.UseSqlServer(builder.Configuration.GetConnectionString("POAsssignment"))
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);
 
+               // builder.Services.AddControllersWithViews();
             });
 
             var app = builder.Build();

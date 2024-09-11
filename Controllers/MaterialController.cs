@@ -109,7 +109,7 @@ namespace PO_Assignment_Project.Controllers
         }
 
         // GET: Material/Delete/5
-        public async Task<IActionResult> Delete(long? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
@@ -127,9 +127,9 @@ namespace PO_Assignment_Project.Controllers
         }
 
         // POST: Material/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var material = await _context.Materials.FindAsync(id);
             _context.Materials.Remove(material);

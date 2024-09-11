@@ -58,19 +58,20 @@
                             <select asp-for="@Model.PurchaseOrderDetails[i].MaterialID" class="form-control" asp-items="ViewBag.MaterialID"></select>
                         </td>
                         <td>
-                            <input asp-for="@Model.PurchaseOrderDetails[i].ItemQuantity" name="ItemQuantity" class="form-control" oninput="calculateItemValue(this)" />
+                            <input asp-for="@Model.PurchaseOrderDetails[i].ItemQuantity" id="ItemQuantity_@i" name="ItemQuantity" class="form-control" oninput="calculateItemValue(@i)" />
                         </td>
                         <td>
-                            <input asp-for="@Model.PurchaseOrderDetails[i].ItemRate" name="ItemRate" class="form-control" oninput="calculateItemValue(this)" />
+                            <input asp-for="@Model.PurchaseOrderDetails[i].ItemRate" id="ItemRate_@i" name="ItemRate" class="form-control" oninput="calculateItemValue(@i)" />
                         </td>
                         <td>
-                            <input asp-for="@Model.PurchaseOrderDetails[i].ItemValue" class="form-control" readonly />
+                            <input asp-for="@Model.PurchaseOrderDetails[i].ItemValue" id="ItemValue_@i" class="form-control" readonly />
                         </td>
                         <td>
                             <input asp-for="@Model.PurchaseOrderDetails[i].ExpectedDate" class="form-control" type="date" />
                         </td>
                     </tr>
                 }
+
             </tbody>
         </table>
     </div>
@@ -84,23 +85,35 @@
     <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>
 
-<script>
-    function calculateItemValue(input) {
-        // Find the parent row of the input
-        const row = input.closest('tr');
+<script type="text/javascript">
+    function calculateItemValue(index) {
+        // Get the quantity and rate inputs by their IDs
+        var quantityElement = document.getElementById('ItemQuantity_' + index);
+        var rateElement = document.getElementById('ItemRate_' + index);
+        var valueElement = document.getElementById('ItemValue_' + index);
 
-        // Get the quantity, rate, and value elements within this row
-        const quantityInput = row.querySelector('input[name="ItemQuantity"]');
-        const rateInput = row.querySelector('input[name="ItemRate"]');
-        const valueInput = row.querySelector('input[name="ItemValue"]');
-        // Parse the quantity and rate values
-        const quantity = parseFloat(quantityInput.value) || 0;
-        const rate = parseFloat(rateInput.value) || 0;
+        if (quantityElement && rateElement && valueElement) {
+            var quantity = quantityElement.value;
+            var rate = rateElement.value;
 
-        // Calculate the item value
-        const itemValue = quantity * rate;
+            // Ensure that both quantity and rate are valid numbers
+            var quantityValue = parseFloat(quantity);
+            var rateValue = parseFloat(rate);
 
-        // Update the value input field
-        valueInput.value = itemValue.toFixed(2);
+            if (!isNaN(quantityValue) && !isNaN(rateValue)) {
+                // Calculate the item value (quantity * rate)
+                var itemValue = quantityValue * rateValue;
+
+                // Set the calculated value into the ItemValue field
+                valueElement.value = itemValue.toFixed(2); // Rounded to 2 decimal places
+            } else {
+                // If inputs are not valid, reset the ItemValue
+                valueElement.value = '';
+            }
+        } else {
+            console.error("One or more elements could not be found for index: " + index);
+        }
     }
 </script>
+
+

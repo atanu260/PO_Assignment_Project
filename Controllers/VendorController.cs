@@ -100,6 +100,43 @@ namespace PO_Assignment_Project.Controllers
             return View(vendor);
         }
 
+        // GET: Vendor/Delete/5
+        public async Task<IActionResult> Delete(long? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var vendor = await _context.Vendors
+                .FirstOrDefaultAsync(m => m.ID == id);
+
+            if (vendor == null)
+            {
+                return NotFound();
+            }
+
+            return View(vendor);
+        }
+
+        // POST: Vendor/Delete/5
+        [HttpPost]
+       // [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(long id)
+        {
+            var vendor = await _context.Vendors.FindAsync(id);
+            if (vendor == null)
+            {
+                return NotFound();
+            }
+
+            _context.Vendors.Remove(vendor);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+
+
         private bool VendorExists(long id)
         {
             return _context.Vendors.Any(e => e.ID == id);

@@ -1,9 +1,14 @@
-﻿namespace PO_Assignment_Project.Models
+﻿using PO_Assignment_Project.Helpers;
+using System.ComponentModel.DataAnnotations;
+
+namespace PO_Assignment_Project.Models
 {
     public class PurchaseOrder
     {
         public int ID { get; set; }
         public string OrderNumber { get; set; }
+        [DataType(DataType.Date)]
+        [DateValidatorHelper(ErrorMessage = "The date must be today or in the future.")]
         public DateTime OrderDate { get; set; }
 
         public long VendorID { get; set; }
