@@ -37,7 +37,7 @@ namespace PO_Assignment_Project.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<string>("LongText")
+                    b.Property<string>("intText")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -87,8 +87,8 @@ namespace PO_Assignment_Project.Migrations
                     b.Property<decimal>("OrderValue")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<long>("VendorID")
-                        .HasColumnType("bigint");
+                    b.Property<int>("VendorID")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -99,11 +99,11 @@ namespace PO_Assignment_Project.Migrations
 
             modelBuilder.Entity("PO_Assignment_Project.Models.PurchaseOrderDetails", b =>
                 {
-                    b.Property<long>("ID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<DateTime>("ExpectedDate")
                         .HasColumnType("datetime2");
@@ -124,8 +124,8 @@ namespace PO_Assignment_Project.Migrations
                     b.Property<int>("MaterialID")
                         .HasColumnType("int");
 
-                    b.Property<long>("PurchaseOrderID")
-                        .HasColumnType("bigint");
+                    b.Property<int>("PurchaseOrderID")
+                        .HasColumnType("int");
 
                     b.Property<int>("PurchaseOrderID1")
                         .HasColumnType("int");
@@ -141,11 +141,11 @@ namespace PO_Assignment_Project.Migrations
 
             modelBuilder.Entity("PO_Assignment_Project.Models.Vendor", b =>
                 {
-                    b.Property<long>("ID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("AddressLine1")
                         .IsRequired()
@@ -209,7 +209,7 @@ namespace PO_Assignment_Project.Migrations
 
                     b.HasOne("PO_Assignment_Project.Models.PurchaseOrder", "PurchaseOrder")
                         .WithMany("PurchaseOrderDetails")
-                        .HasForeignKey("PurchaseOrderID1")
+                        .HasForeignKey("PurchaseOrderID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

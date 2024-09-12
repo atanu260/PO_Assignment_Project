@@ -36,7 +36,7 @@ namespace PO_Assignment_Project.Controllers
             return View(vendor);
         }
 
-        public async Task<IActionResult> Edit(long? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -53,7 +53,7 @@ namespace PO_Assignment_Project.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, Vendor vendor)
+        public async Task<IActionResult> Edit(int id, Vendor vendor)
         {
             if (id != vendor.ID)
             {
@@ -88,7 +88,7 @@ namespace PO_Assignment_Project.Controllers
         //    return View();
         //}
 
-        public async Task<IActionResult> Details(long id)
+        public async Task<IActionResult> Details(int id)
         {
             var vendor = await _context.Vendors
                 .FirstOrDefaultAsync(m => m.ID == id);
@@ -101,7 +101,7 @@ namespace PO_Assignment_Project.Controllers
         }
 
         // GET: Vendor/Delete/5
-        public async Task<IActionResult> Delete(long? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
@@ -122,7 +122,7 @@ namespace PO_Assignment_Project.Controllers
         // POST: Vendor/Delete/5
         [HttpPost]
        // [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var vendor = await _context.Vendors.FindAsync(id);
             if (vendor == null)
@@ -137,7 +137,7 @@ namespace PO_Assignment_Project.Controllers
 
 
 
-        private bool VendorExists(long id)
+        private bool VendorExists(int id)
         {
             return _context.Vendors.Any(e => e.ID == id);
         }

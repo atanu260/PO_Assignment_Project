@@ -11,7 +11,7 @@ namespace PO_Assignment_Project.Models
         [DateValidatorHelper(ErrorMessage = "The date must be today or in the future.")]
         public DateTime OrderDate { get; set; }
 
-        public long VendorID { get; set; }
+        public int VendorID { get; set; }
         public Vendor Vendor { get; set; }
 
         public string Notes { get; set; }

@@ -9,27 +9,16 @@ namespace PO_Assignment_Project.Models
         private static int _codeCounter = 0;
         private string _code;
 
-        Vendor()
-        {
-            Code = GenerateNewCode();
-        }
-        public long ID { get; set; }
+        //Vendor()
+        //{
+        //    Code = GenerateNewCode();
+        //}
+        public int ID { get; set; }
 
-        [StringLength(5)]
+       // [Required]
         public string Code
         {
-            get
-            {
-                if (string.IsNullOrEmpty(_code))
-                {
-                    _code = GenerateNewCode();
-                }
-                return _code;
-            }
-            private set
-            {
-                _code = value;
-            }
+            get; set;
         }
 
         [StringLength(150)]
@@ -55,9 +44,9 @@ namespace PO_Assignment_Project.Models
 
         public bool IsActive { get; set; }
 
-        private string GenerateNewCode()
-        {
-            return $"VEN-{++_codeCounter:D4}";
-        }
+        //private string GenerateNewCode()
+        //{
+        //    return $"VEN-{++_codeCounter:D4}";
+        //}
     }
 }

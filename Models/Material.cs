@@ -45,7 +45,7 @@ namespace PO_Assignment_Project.Models
         [MaxLength(50)]
         public string ShortText { get; set; }
 
-        public string LongText { get; set; }
+        public string intText { get; set; }
 
         [Required]
         public string Unit { get; set; }

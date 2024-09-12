@@ -19,7 +19,7 @@ namespace PO_Assignment_Project.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ShortText = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    LongText = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    intText = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Unit = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ReorderLevel = table.Column<int>(type: "int", nullable: false),
                     MinOrderQuantity = table.Column<int>(type: "int", nullable: false),
@@ -34,7 +34,7 @@ namespace PO_Assignment_Project.Migrations
                 name: "Vendors",
                 columns: table => new
                 {
-                    ID = table.Column<long>(type: "bigint", nullable: false)
+                    ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Code = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
@@ -58,7 +58,7 @@ namespace PO_Assignment_Project.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OrderNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    VendorID = table.Column<long>(type: "bigint", nullable: false),
+                    VendorID = table.Column<int>(type: "int", nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OrderValue = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     OrderStatus = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -78,10 +78,10 @@ namespace PO_Assignment_Project.Migrations
                 name: "PurchaseOrderDetails",
                 columns: table => new
                 {
-                    ID = table.Column<long>(type: "bigint", nullable: false)
+                    ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PurchaseOrderID = table.Column<long>(type: "int", nullable: false),
-                   // PurchaseOrderID1 = table.Column<int>(type: "int", nullable: false),
+                    PurchaseOrderID = table.Column<int>(type: "int", nullable: false),
+                    PurchaseOrderID1 = table.Column<int>(type: "int", nullable: true),
                     MaterialID = table.Column<int>(type: "int", nullable: false),
                     ItemQuantity = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     ItemRate = table.Column<decimal>(type: "decimal(18,2)", nullable: false),

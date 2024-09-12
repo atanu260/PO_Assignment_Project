@@ -48,22 +48,44 @@ namespace PO_Assignment_Project.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        
         public async Task<IActionResult> Create(PurchaseOrder purchaseOrder)
         {
             if (!ModelState.IsValid)
             {
+                // Automatically generate a 3-4 digit order number
+                Random rnd = new Random();
+                string newOrderNumber;
+                bool isUnique = false;
+
+                
+                do
+                {
+                    newOrderNumber = rnd.Next(100, 10000).ToString();
+                    isUnique = !_context.PurchaseOrders.Any(po => po.OrderNumber == newOrderNumber);
+                } while (!isUnique);
+
+                
+                purchaseOrder.OrderNumber = newOrderNumber;
+
+           
                 _context.Add(purchaseOrder);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
 
+            
             ViewData["VendorID"] = new SelectList(_context.Vendors, "ID", "Name", purchaseOrder.VendorID);
             ViewData["MaterialID"] = new SelectList(_context.Materials, "ID", "ShortText");
             return View(purchaseOrder);
         }
 
 
-        public async Task<IActionResult> Edit(long? id)
+
+
+
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -87,7 +109,7 @@ namespace PO_Assignment_Project.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, PurchaseOrder purchaseOrder)
+        public async Task<IActionResult> Edit(int id, PurchaseOrder purchaseOrder)
         {
             if (id != purchaseOrder.ID)
             {
@@ -120,30 +142,11 @@ namespace PO_Assignment_Project.Controllers
             return View(purchaseOrder);
         }
 
-        //public async Task<IActionResult> Details(long? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+        
 
-        //    var purchaseOrder = await _context.PurchaseOrders
-        //        .Include(p => p.Vendor)
-        //        .Include(p => p.PurchaseOrderDetails)
-        //        .ThenInclude(d => d.Material)
-        //        .FirstOrDefaultAsync(p => p.ID == id);
-
-        //    if (purchaseOrder == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(purchaseOrder);
-        //}
-
-        public async Task<IActionResult> Details(long? id)
+        public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+            if (id is null)
             {
                 return NotFound();
             }
@@ -154,6 +157,23 @@ namespace PO_Assignment_Project.Controllers
                 .ThenInclude(d => d.Material)
                 .FirstOrDefaultAsync(m => m.ID == id);
 
+            if (purchaseOrder is null)
+            {
+                return NotFound();
+            }
+
+            return View(purchaseOrder);
+        }
+
+        public async Task<IActionResult> Delete(long? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var purchaseOrder = await _context.PurchaseOrders
+                .FirstOrDefaultAsync(m => m.ID == id);
             if (purchaseOrder == null)
             {
                 return NotFound();
@@ -162,9 +182,28 @@ namespace PO_Assignment_Project.Controllers
             return View(purchaseOrder);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(long id)
+        {
+            var purchaseOrder = await _context.PurchaseOrders
+                .Include(po => po.PurchaseOrderDetails)
+                .FirstOrDefaultAsync(po => po.ID == id);
 
+            if (purchaseOrder != null)
+            {
+                // Remove associated purchase order details first
+                _context.PurchaseOrderDetails.RemoveRange(purchaseOrder.PurchaseOrderDetails);
 
-        private bool PurchaseOrderExists(long id)
+                // Remove the purchase order itself
+                _context.PurchaseOrders.Remove(purchaseOrder);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool PurchaseOrderExists(int id)
         {
             return _context.PurchaseOrders.Any(p => p.ID == id);
         }

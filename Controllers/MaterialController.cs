@@ -91,7 +91,7 @@ namespace PO_Assignment_Project.Controllers
         }
 
         // GET: Material/Details/5
-        public async Task<IActionResult> Details(long? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -138,7 +138,7 @@ namespace PO_Assignment_Project.Controllers
         }
 
         // Check if material exists
-        private bool MaterialExists(long id)
+        private bool MaterialExists(int id)
         {
             return _context.Materials.Any(e => e.ID == id);
         }
