@@ -155,6 +155,7 @@ namespace PO_Assignment_Project.Controllers
                 .Include(p => p.Vendor)
                 .Include(p => p.PurchaseOrderDetails)
                 .ThenInclude(d => d.Material)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
 
             if (purchaseOrder is null)

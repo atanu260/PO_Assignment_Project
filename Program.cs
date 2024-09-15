@@ -15,8 +15,8 @@ namespace PO_Assignment_Project
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("POAsssignment"));
-                //.UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);
+                options.UseSqlServer(builder.Configuration.GetConnectionString("POAsssignment"))
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);
 
                // builder.Services.AddControllersWithViews();
             });
