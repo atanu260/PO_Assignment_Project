@@ -14,5 +14,9 @@ namespace PO_Assignment_Project.Data
         public DbSet<Material> Materials { get; set; }
         public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
         public DbSet<PurchaseOrderDetails> PurchaseOrderDetails { get; set; }
+        public DbSet<Contractor> Contractors { get; set; }
+        public DbSet<Payment> Payment { get; set; }
+        public DbSet<Site> Site { get; set; }
+
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PO_Assignment_Project.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class newinit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -36,7 +36,7 @@ namespace PO_Assignment_Project.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Code = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     AddressLine1 = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     AddressLine2 = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
@@ -48,6 +48,30 @@ namespace PO_Assignment_Project.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Vendors", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Site",
+                columns: table => new
+                {
+                    SiteId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TypeOfSite = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StartedOn = table.Column<DateOnly>(type: "date", nullable: false),
+                    EndedOn = table.Column<DateOnly>(type: "date", nullable: false),
+                    MaterialID = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Site", x => x.SiteId);
+                    table.ForeignKey(
+                        name: "FK_Site_Materials_MaterialID",
+                        column: x => x.MaterialID,
+                        principalTable: "Materials",
+                        principalColumn: "ID");
                 });
 
             migrationBuilder.CreateTable(
@@ -75,13 +99,34 @@ namespace PO_Assignment_Project.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Contractors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Owner = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SiteId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Contractors", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Contractors_Site_SiteId",
+                        column: x => x.SiteId,
+                        principalTable: "Site",
+                        principalColumn: "SiteId");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PurchaseOrderDetails",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PurchaseOrderID = table.Column<int>(type: "int", nullable: false),
-                    PurchaseOrderID1 = table.Column<int>(type: "int", nullable: true),
                     MaterialID = table.Column<int>(type: "int", nullable: false),
                     ItemQuantity = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     ItemRate = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -106,6 +151,50 @@ namespace PO_Assignment_Project.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Payment",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Balance = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PaymentType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PaymentAmount = table.Column<int>(type: "int", nullable: false),
+                    PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ContractorId = table.Column<int>(type: "int", nullable: true),
+                    PaidOn = table.Column<DateOnly>(type: "date", nullable: false),
+                    SiteId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Payment", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Payment_Contractors_ContractorId",
+                        column: x => x.ContractorId,
+                        principalTable: "Contractors",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Payment_Site_SiteId",
+                        column: x => x.SiteId,
+                        principalTable: "Site",
+                        principalColumn: "SiteId");
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Contractors_SiteId",
+                table: "Contractors",
+                column: "SiteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Payment_ContractorId",
+                table: "Payment",
+                column: "ContractorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Payment_SiteId",
+                table: "Payment",
+                column: "SiteId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_PurchaseOrderDetails_MaterialID",
                 table: "PurchaseOrderDetails",
@@ -120,22 +209,36 @@ namespace PO_Assignment_Project.Migrations
                 name: "IX_PurchaseOrders_VendorID",
                 table: "PurchaseOrders",
                 column: "VendorID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Site_MaterialID",
+                table: "Site",
+                column: "MaterialID");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Payment");
+
+            migrationBuilder.DropTable(
                 name: "PurchaseOrderDetails");
 
             migrationBuilder.DropTable(
-                name: "Materials");
+                name: "Contractors");
 
             migrationBuilder.DropTable(
                 name: "PurchaseOrders");
 
             migrationBuilder.DropTable(
+                name: "Site");
+
+            migrationBuilder.DropTable(
                 name: "Vendors");
+
+            migrationBuilder.DropTable(
+                name: "Materials");
         }
     }
 }

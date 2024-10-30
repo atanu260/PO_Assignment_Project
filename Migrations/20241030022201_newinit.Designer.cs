@@ -12,8 +12,8 @@ using PO_Assignment_Project.Data;
 namespace PO_Assignment_Project.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240911112525_init")]
-    partial class init
+    [Migration("20241030022201_newinit")]
+    partial class newinit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,40 @@ namespace PO_Assignment_Project.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("PO_Assignment_Project.Models.Contractor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Owner")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SiteId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SiteId");
+
+                    b.ToTable("Contractors");
+                });
 
             modelBuilder.Entity("PO_Assignment_Project.Models.Material", b =>
                 {
@@ -40,10 +74,6 @@ namespace PO_Assignment_Project.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<string>("intText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("MinOrderQuantity")
                         .HasColumnType("int");
 
@@ -59,9 +89,51 @@ namespace PO_Assignment_Project.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("intText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ID");
 
                     b.ToTable("Materials");
+                });
+
+            modelBuilder.Entity("PO_Assignment_Project.Models.Payment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Balance")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ContractorId")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("PaidOn")
+                        .HasColumnType("date");
+
+                    b.Property<int>("PaymentAmount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SiteId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContractorId");
+
+                    b.HasIndex("SiteId");
+
+                    b.ToTable("Payment");
                 });
 
             modelBuilder.Entity("PO_Assignment_Project.Models.PurchaseOrder", b =>
@@ -112,7 +184,6 @@ namespace PO_Assignment_Project.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ItemNotes")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ItemQuantity")
@@ -130,16 +201,49 @@ namespace PO_Assignment_Project.Migrations
                     b.Property<int>("PurchaseOrderID")
                         .HasColumnType("int");
 
-                    b.Property<int>("PurchaseOrderID1")
-                        .HasColumnType("int");
-
                     b.HasKey("ID");
 
                     b.HasIndex("MaterialID");
 
-                    b.HasIndex("PurchaseOrderID1");
+                    b.HasIndex("PurchaseOrderID");
 
                     b.ToTable("PurchaseOrderDetails");
+                });
+
+            modelBuilder.Entity("PO_Assignment_Project.Models.Site", b =>
+                {
+                    b.Property<int>("SiteId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SiteId"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly>("EndedOn")
+                        .HasColumnType("date");
+
+                    b.Property<int?>("MaterialID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly>("StartedOn")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TypeOfSite")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("SiteId");
+
+                    b.HasIndex("MaterialID");
+
+                    b.ToTable("Site");
                 });
 
             modelBuilder.Entity("PO_Assignment_Project.Models.Vendor", b =>
@@ -162,8 +266,7 @@ namespace PO_Assignment_Project.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContactEmail")
                         .IsRequired()
@@ -189,6 +292,30 @@ namespace PO_Assignment_Project.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Vendors");
+                });
+
+            modelBuilder.Entity("PO_Assignment_Project.Models.Contractor", b =>
+                {
+                    b.HasOne("PO_Assignment_Project.Models.Site", "Site")
+                        .WithMany()
+                        .HasForeignKey("SiteId");
+
+                    b.Navigation("Site");
+                });
+
+            modelBuilder.Entity("PO_Assignment_Project.Models.Payment", b =>
+                {
+                    b.HasOne("PO_Assignment_Project.Models.Contractor", "Contractor")
+                        .WithMany()
+                        .HasForeignKey("ContractorId");
+
+                    b.HasOne("PO_Assignment_Project.Models.Site", "Site")
+                        .WithMany()
+                        .HasForeignKey("SiteId");
+
+                    b.Navigation("Contractor");
+
+                    b.Navigation("Site");
                 });
 
             modelBuilder.Entity("PO_Assignment_Project.Models.PurchaseOrder", b =>
@@ -219,6 +346,15 @@ namespace PO_Assignment_Project.Migrations
                     b.Navigation("Material");
 
                     b.Navigation("PurchaseOrder");
+                });
+
+            modelBuilder.Entity("PO_Assignment_Project.Models.Site", b =>
+                {
+                    b.HasOne("PO_Assignment_Project.Models.Material", "Material")
+                        .WithMany()
+                        .HasForeignKey("MaterialID");
+
+                    b.Navigation("Material");
                 });
 
             modelBuilder.Entity("PO_Assignment_Project.Models.PurchaseOrder", b =>
