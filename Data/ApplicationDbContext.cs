@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.General;
 using PO_Assignment_Project.Models;
 
 namespace PO_Assignment_Project.Data
 {
-    public class ApplicationDbContext: DbContext
+    public class ApplicationDbContext : IdentityDbContext<AppUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
       : base(options)

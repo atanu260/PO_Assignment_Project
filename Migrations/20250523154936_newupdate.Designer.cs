@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PO_Assignment_Project.Data;
 
@@ -11,9 +12,11 @@ using PO_Assignment_Project.Data;
 namespace PO_Assignment_Project.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250523154936_newupdate")]
+    partial class newupdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -204,11 +207,9 @@ namespace PO_Assignment_Project.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
-
-                    b.Property<int>("UserType")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

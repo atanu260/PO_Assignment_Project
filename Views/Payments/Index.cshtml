@@ -1,0 +1,48 @@
+﻿@model IEnumerable<PO_Assignment_Project.Models.Payment>
+
+@{
+    ViewData["Title"] = "Payment List";
+}
+<h2>Payment Details</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Payment</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentMethod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Contractor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaidOn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Balance)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.PaymentType)</td>
+                <td>@Html.DisplayFor(modelItem => item.PaymentMethod)</td>
+                <td>@Html.DisplayFor(modelItem => item.PaidOn)</td>
+                <td>@Html.DisplayFor(modelItem => item.Balance)</td>
+               @*  <td>
+                    <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-warning">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID" class="btn btn-info">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID" class="btn btn-danger">Delete</a>
+                </td> *@
+            </tr>
+        }
+    </tbody>

@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PO_Assignment_Project.Data;
 using PO_Assignment_Project.Models;
 
 namespace PO_Assignment_Project.Controllers
-{
+{   
+    [Authorize(Roles ="Vendor")]
     public class VendorController : Controller
     {
         private readonly ApplicationDbContext _context;

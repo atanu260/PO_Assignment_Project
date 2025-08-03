@@ -1,12 +1,14 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PO_Assignment_Project.Data;
 using System;
+using System.Threading.Tasks;
 
 namespace PO_Assignment_Project
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +23,24 @@ namespace PO_Assignment_Project
                // builder.Services.AddControllersWithViews();
             });
 
+            builder.Services.AddIdentity<AppUser, IdentityRole>()
+                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
             var app = builder.Build();
+
+
+            //using(var scope = app.Services.CreateAsyncScope())
+            //{
+            //    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            //    var roles = Enum.GetNames(typeof(PO_Assignment_Project.Data.Enum.UserType));
+            //    foreach (var role in roles)
+            //    {
+            //        if(!await roleManager.RoleExistsAsync(role))
+            //        {
+            //            await roleManager.CreateAsync(new IdentityRole(role));
+            //        }
+            //    }
+            //}
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -35,12 +54,26 @@ namespace PO_Assignment_Project
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
+            using (var scope = app.Services.CreateAsyncScope())
+            {
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                var roles = Enum.GetNames(typeof(PO_Assignment_Project.Data.Enum.UserType));
+                foreach (var role in roles)
+                {
+                    if (!await roleManager.RoleExistsAsync(role))
+                    {
+                        await roleManager.CreateAsync(new IdentityRole(role));
+                    }
+                }
+            }
 
             app.Run();
         }
